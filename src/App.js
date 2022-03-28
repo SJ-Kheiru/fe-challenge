@@ -39,12 +39,16 @@ function App() {
     setActive([...temp]);
   }, [currentPage]);
 
-  const searchApi = async () => {
+  const searchApi = () => {
     fetch(`http://itunes.apple.com/search?term=${text}`)
       .then((response) => response.json())
       .then((data) => {
         console.debug(data);
-        setMusicLists(data.results);
+        setMusicLists(
+          data.results.sort((a, b) =>
+            a.collectionName.localeCompare(b.collectionName)
+          )
+        );
       });
   };
 
@@ -93,6 +97,17 @@ function App() {
           </List>
         </Box>
       </Box>
+      <List sx={{}}>
+        {musicLists.map((item, ind) => (
+          <ListItem sx={{ bgcolor: ind % 2 === 0 ? "lightgrey" : "inherit" }}>
+            {ind}{" "}
+            <ListItemText
+              // primary={item && item.collectionName ? item.collectionName : item}
+              primary={item.collectionName}
+            />
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 }
